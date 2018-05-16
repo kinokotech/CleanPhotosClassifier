@@ -7,31 +7,24 @@ import numpy as np
 
 
 def main():
-    path = '../image_data/beautiful/food/'
+    #path = '../image_data/beautiful/food/'
+    path = './resized/'
     files = glob.glob(path + '*jpg')
     os.makedirs("./blured", exist_ok=True)
 
-    n = 10
-
     for f_in in files:
+        angle = np.random.randint(180)
+        radius = np.random.randint(100)
+        sigma = np.random.randint(100)
 
-        for i in range(n):
+        base_name = os.path.basename(f_in)
 
-            angle = np.random.randint(180)
-            radius = np.random.randint(100)
-            sigma = np.random.randint(100)
+        f_out = f"./blured/{base_name}"
 
-            base_name = os.path.basename(f_in)
+        cmd = f"convert {f_in} -motion-blur {angle}x{radius}+{angle} {f_out}"
+        print(cmd)
 
-            tmp = base_name.split(".")
-            base_name = tmp[0] + "_" + str(i) + "." + tmp[1]
-
-            f_out = f"./blured/{base_name}"
-
-            cmd = f"convert {f_in} -motion-blur {angle}x{radius}+{angle} {f_out}"
-            print(cmd)
-
-            subprocess.call(cmd, shell=True)
+        subprocess.call(cmd, shell=True)
 
     print("Done!")
 
