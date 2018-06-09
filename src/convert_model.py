@@ -31,19 +31,16 @@ def main():
             tf.train.write_graph(graph_def, '.',
                                  "model/cnn_bler.pb", as_text=False)
 
-            # freeze_graph(input_graph="model/cnn_bler.pb",
-            #             input_saver="",
-            #             restore_op_name='save/restore_all',
-            #             filename_tensor_name='save/Const:0',
-            #             initializer_nodes='',
-            #             input_binary=True,
-            #             input_checkpoint="./model/cnn_bler.ckpt",
-            #             output_node_names="inference_1",
-            #             # restore_op_name='save/restore_all',
-            #             # filename_tensor_name='save/Const:0',
-            #             output_graph="model/frozen_cnn_bler.pb",
-            #
-            #             clear_devices=True)
+            freeze_graph(input_graph="model/cnn_bler.pb",
+                         input_saver="",
+                         input_binary=True,
+                         input_checkpoint="./model/cnn_bler.ckpt",
+                         output_node_names="inference_1",
+                         restore_op_name='save/restore_all',
+                         filename_tensor_name='save/Const:0',
+                         output_graph="model/frozen_cnn_bler.pb",
+                         clear_devices=True,
+                         initializer_nodes='',)
 
 
 if __name__ == "__main__":
