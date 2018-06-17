@@ -73,6 +73,11 @@ def main():
         save_path = saver.save(sess, "model/cnn_bler.ckpt")
         print("Model saved in file: %s" % save_path)
 
+        converter = tf.contrib.lite.TocoConverter.from_session(sess, [
+                                                               x], [training_logits])
+        tflite_model = converter.convert()
+        open("model/cnn_bler.tflite", "wb").write(tflite_model)
+
 
 if __name__ == "__main__":
     main()
