@@ -37,4 +37,4 @@ def convolutional(x, mode=True):
 
     output = tf.layers.dense(inputs=dropout, units=1)
 
-    return tf.identity(output, name="inference")
+    return tf.sigmoid(output, name="inference")

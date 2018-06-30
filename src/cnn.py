@@ -7,6 +7,7 @@ import glob
 import numpy as np
 import model
 from tensorflow.python.framework import graph_util
+from sklearn import utils
 
 
 def load_data(true_path, false_path):
@@ -14,12 +15,13 @@ def load_data(true_path, false_path):
     false_files = glob.glob(false_path + '*jpg')
 
     labels = np.append(np.ones(len(true_files)),
-                       -1 * np.ones(len(false_files)))
+                       np.zeros(len(false_files)))
 
     labels = labels.reshape(-1, 1)
 
     images = []
-    for f_in in true_files + false_files:
+    files = true_files + false_files
+    for f_in in files:
         img = cv2.imread(f_in)
         img = cv2.resize(img, (28, 28))
         images.append(img.flatten().astype(np.float32) / 255.0)
@@ -40,15 +42,21 @@ def main():
     training_logits = model.convolutional(x)
 
     # loss function
-    cross_entropy = tf.reduce_mean(
-        tf.nn.softmax_cross_entropy_with_logits(labels=y, logits=training_logits))
+    # cross_entropy = tf.reduce_mean(
+    #    tf.nn.softmax_cross_entropy_with_logits(labels=y, logits=training_logits))
+
+    # cross_entropy = tf.reduce_mean(
+    #    tf.nn.sigmoid_cross_entropy_with_logits(labels=y, logits=training_logits))
+
+    loss = tf.losses.mean_squared_error(labels=y, predictions=training_logits)
 
     # optimizer
-    train_step = tf.train.AdamOptimizer(1e-4).minimize(cross_entropy)
+    train_step = tf.train.AdamOptimizer(1e-4).minimize(loss)
 
-    correct_prediction = tf.equal(
-        tf.argmax(training_logits, 1), tf.argmax(y, 1))
+    # correct_prediction = tf.equal(
+    #    tf.argmax(training_logits, 1), tf.argmax(y, 1))
 
+    correct_prediction = tf.equal(tf.round(training_logits), y)
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
     saver = tf.train.Saver()
@@ -58,7 +66,10 @@ def main():
         sess.run(tf.global_variables_initializer())
 
         for epoch in range(100):
-            for i in range(int(len(images) / batch_size)):
+            images, labels = utils.shuffle(images, labels)
+
+            for i in range(0, int(len(images)), batch_size):
+
                 batch = images[i: i + batch_size], labels[i: i + batch_size]
 
                 train_step.run(
