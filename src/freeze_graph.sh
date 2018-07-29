@@ -1,7 +1,5 @@
 #!/bin/bash
 
-#tfpath=`pip show tensorflow | grep "Location: \(.\+\)$" | sed 's/Location: //'`
-#echo $tfpath
 tfpath='../tensorflow'
 $tfpath/bazel-bin/tensorflow/python/tools/freeze_graph \
     --input_graph=./model/cnn_bler.pb \

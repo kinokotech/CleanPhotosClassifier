@@ -45,21 +45,11 @@ def main():
         # train logits
         training_logits = model.convolutional(x)
 
-        # loss function
-        # cross_entropy = tf.reduce_mean(
-        #    tf.nn.softmax_cross_entropy_with_logits(labels=y, logits=training_logits))
-
-        # cross_entropy = tf.reduce_mean(
-        #    tf.nn.sigmoid_cross_entropy_with_logits(labels=y, logits=training_logits))
-
         loss = tf.losses.mean_squared_error(
             labels=y, predictions=training_logits)
 
         # optimizer
         train_step = tf.train.AdamOptimizer(1e-4).minimize(loss)
-
-        # correct_prediction = tf.equal(
-        #    tf.argmax(training_logits, 1), tf.argmax(y, 1))
 
         correct_prediction = tf.equal(tf.round(training_logits), y)
         accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
@@ -69,7 +59,7 @@ def main():
 
             sess.run(tf.global_variables_initializer())
 
-            for epoch in range(1):
+            for epoch in range(100):
                 images, labels = utils.shuffle(images, labels)
 
                 for i in range(0, int(len(images)), batch_size):
@@ -89,48 +79,10 @@ def main():
             save_path = saver.save(sess, "model/cnn_bler.ckpt")
             print("Model saved in file: %s" % save_path)
 
-            # graph_def = graph_util.convert_variables_to_constants(
-            #    sess, sess.graph_def, ["inference"])
-
-            # converter = tf.contrib.lite.TocoConverter.from_session(
-            #    sess, [x], [training_logits])
-
             tf.train.write_graph(sess.graph_def, './model',
                                  'cnn_bler.pb', as_text=False)
             tf.train.write_graph(sess.graph_def, './model',
                                  'cnn_bler.pbtxt', as_text=True)
-
-            # converter = tf.contrib.lite.TocoConverter.from_saved_model(
-            #    './model')
-            #tflite_model = converter.convert()
-            #open("model/cnn_bler.tflite", "wb").write(tflite_model)
-
-            #graph_def_file = "model/frozen_cnn_bler.pb"
-            #input_arrays = ["in"]
-            #output_arrays = ["inference"]
-
-            # converter = tf.contrib.lite.TocoConverter.from_frozen_graph(
-            #    graph_def_file, input_arrays, output_arrays)
-
-            #tflite_model = converter.convert()
-            #open("model/cnn_bler_model.tflite", "wb").write(tflite_model)
-
-            # converter.inference_type = tf.contrib.lite.constants.QUANTIZED_UINT8
-
-            # print(x.get_shape())
-
-            # tflite_model = tf.contrib.lite.toco_convert(
-            #    sess.graph_def, [x], [training_logits])
-
-            # tflite_model = tf.contrib.lite.toco_convert(
-            #    sess.graph_def, [x], [training_logits])
-
-            # tflite_model.inference_type = lite_constants.QUANTIZED_UINT8
-
-            #tflite_model = converter.convert()
-            #+path = "model/cnn_bler.tflite"
-            #open(path, "wb").write(tflite_model)
-            #print("tflite file saved in file: %s" % path)
 
 
 if __name__ == "__main__":
