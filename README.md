@@ -1,6 +1,6 @@
 # CleanPhotosClassifier
 - A goal of this project is to develop Android app which can clean up your photo folder.
-- The Android src is published at [CleanPhotosAndroid](https://github.com/masaponto/CleanPhotosAndroid).
+- The sample android source code is published at [CleanPhotosAndroidSample](https://github.com/kinokotech/CleanPhotosAndroidSample).
 
 ## Require 
 - bazel 0.15.1 and up
