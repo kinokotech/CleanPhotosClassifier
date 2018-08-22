@@ -1,4 +1,4 @@
-# CleanPhotos
+# CleanPhotosClassifier
 - A goal of this project is to develop Android app which can clean up your photo folder.
 - The Android src is published at [CleanPhotosAndroid](https://github.com/masaponto/CleanPhotosAndroid).
 
