@@ -29,13 +29,15 @@ def convolutional(x, mode=True):
 
     pool2_flat = tf.reshape(pool2, [-1, 7 * 7 * 64])
 
-    dense = tf.layers.dense(
+    dense1 = tf.layers.dense(
         inputs=pool2_flat, units=1024, activation=tf.nn.relu)
 
     dropout = tf.layers.dropout(
-        inputs=dense, rate=0.4, training=mode == tf.estimator.ModeKeys.TRAIN)
+        inputs=dense1, rate=0.4, training=mode == tf.estimator.ModeKeys.TRAIN)
 
-    output = tf.layers.dense(inputs=dropout, units=1)
+    dense2 = tf.layers.dense(inputs=dropout, units=3, name="inference")
 
-    return tf.sigmoid(output, name="inference")
+    #output = tf.nn.softmax(dense2, name="inference")
+
+    return dense2
 
