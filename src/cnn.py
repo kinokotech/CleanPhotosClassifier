@@ -37,7 +37,6 @@ def load_data(beautiful_path,
              [3 for _ in range(len(dark_files))]
 
     # one hot vector
-    ys = transform_onehot(labels)
 
     # make dataset
     images = []
@@ -47,11 +46,13 @@ def load_data(beautiful_path,
         img = cv2.resize(img, (28, 28))
         images.append(img.flatten().astype(np.float32) / 255.0)
 
-    return np.array(images), ys
+    return np.array(images), labels
 
 
 def fit(X, y, output_path,
         batch_size=50, verbose=False):
+
+    y = transform_onehot(y)
 
     with tf.Graph().as_default():
 
@@ -62,8 +63,8 @@ def fit(X, y, output_path,
         # train logits
         training_logits = model.convolutional(_x)
 
-        loss = tf.reduce_mean(tf.losses.softmax_cross_entropy(onehot_labels=_y,
-                                                              logits=training_logits))
+        loss = tf.losses.softmax_cross_entropy(onehot_labels=_y, logits=training_logits)
+
         # optimizer
         train_step = tf.train.AdamOptimizer(1e-4).minimize(loss)
 
@@ -78,15 +79,14 @@ def fit(X, y, output_path,
             for epoch in range(100):
                 images, labels = shuffle(X, y)
 
-                for i in range(0, int(len(images)), batch_size):
-                    batch = X[i: i + batch_size], y[i: i + batch_size]
+                for i in range(0, len(images), batch_size):
+                    batch = images[i: i + batch_size], labels[i: i + batch_size]
                     train_step.run(feed_dict={_x: batch[0], _y: batch[1]})
 
                 if epoch % 10 == 0:
-                    i = random.randint(0, int(len(images)/batch_size)) * batch_size
-                    batch = X[i: i + batch_size], y[i: i + batch_size]
-                    train_accuracy = accuracy.eval(feed_dict={
-                        _x: batch[0], _y: batch[1]})
+                    i = random.randint(0, int(len(images)/100)) * 100
+                    batch = images[i: i + 100], labels[i: i + 100]
+                    train_accuracy = accuracy.eval(feed_dict={_x: batch[0], _y: batch[1]})
 
                     if verbose:
                         print('step %d, training accuracy %g' % (epoch, train_accuracy))
