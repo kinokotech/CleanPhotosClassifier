@@ -35,9 +35,9 @@ def convolutional(x, mode=True):
     dropout = tf.layers.dropout(
         inputs=dense1, rate=0.4, training=mode == tf.estimator.ModeKeys.TRAIN)
 
-    dense2 = tf.layers.dense(inputs=dropout, units=3, name="inference")
+    dense2 = tf.layers.dense(inputs=dropout, units=3)
 
-    #output = tf.nn.softmax(dense2, name="inference")
+    output = tf.identity(dense2, name="inference")
 
-    return dense2
+    return output
 
