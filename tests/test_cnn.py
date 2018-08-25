@@ -6,7 +6,6 @@ import sys
 sys.path.append('../src/')
 import cnn
 
-
 class TestCnn:
 
     def test_transform_onehot(self):

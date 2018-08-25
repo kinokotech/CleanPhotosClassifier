@@ -2,8 +2,8 @@
 
 tfpath='../tensorflow'
 $tfpath/bazel-bin/tensorflow/python/tools/freeze_graph \
-    --input_graph=./model/cnn_bler.pb \
-    --input_checkpoint=./model/cnn_bler.ckpt \
+    --input_graph=./model2/cnn.pb \
+    --input_checkpoint=./model2/cnn.ckpt \
     --input_binary=true \
     --output_node_names=inference \
-    --output_graph=./model/frozen_cnn_bler.pb
+    --output_graph=./model2/frozen_cnn.pb

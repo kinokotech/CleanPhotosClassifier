@@ -101,7 +101,7 @@ def main():
     converter = ImageConverter()
     #converter.resize('../image_data/beautiful/food/', './fuga')
     #converter.motion_bluer('./resized/', './hoge')
-    converter.gamma_correction('./resized/', './dark')
+    converter.gamma_correction('.row_data/resized/', './row_data/dark')
 
 
 if __name__ == "__main__":

@@ -9,6 +9,7 @@ from sklearn.preprocessing import OneHotEncoder
 from sklearn.utils import shuffle
 import random
 
+
 def transform_onehot(labels):
     labels = np.array(labels).reshape(1, -1)
     encoder = OneHotEncoder()
@@ -36,8 +37,6 @@ def load_data(beautiful_path,
              [2 for _ in range(len(blur_files))] +\
              [3 for _ in range(len(dark_files))]
 
-    # one hot vector
-
     # make dataset
     images = []
     files = beautiful_files + blur_files + dark_files
@@ -52,6 +51,7 @@ def load_data(beautiful_path,
 def fit(X, y, output_path,
         batch_size=50, verbose=False):
 
+    # one hot vector
     y = transform_onehot(y)
 
     with tf.Graph().as_default():
@@ -107,7 +107,7 @@ def main():
                                blur_path='./row_data/blured/',
                                dark_path='./row_data/dark/')
 
-    fit(images, labels, output_path='./model_tmp', verbose=True)
+    fit(images, labels, output_path='./model2', verbose=True)
 
 
 if __name__ == "__main__":
