@@ -81,15 +81,19 @@ def main():
                   loss='categorical_crossentropy',
                   metrics=['accuracy'])
 
-    model.fit(images, y, epochs=1, batch_size=50, verbose=1)
+    model.fit(images, y, epochs=100, batch_size=50, verbose=1)
 
     model.summary()
-
+    print(model.input)
+    print(model.output)
     keras_file = "model_keras/cnn_model.h5"
     model.save(keras_file)
     #tf.keras.models.save_model(model, keras_file)
 
-    converter = tf.contrib.lite.TFLiteConverter.from_keras_model_file(keras_file)
+    converter = tf.contrib.lite.TFLiteConverter.from_keras_model_file(keras_file,
+                                                                      input_arrays=['input_input'],
+                                                                      output_arrays=['output/Softmax'],
+                                                                      input_shapes={'input_input': [3, 2352]})
     tflite_model = converter.convert()
     open("model_keras/converted_model.tflite", "wb").write(tflite_model)
 
